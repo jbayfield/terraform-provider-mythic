@@ -5,6 +5,8 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+
+	"github.com/jbayfield/mythic-client-go"
 )
 
 func init() {
@@ -26,11 +28,25 @@ func init() {
 func New(version string) func() *schema.Provider {
 	return func() *schema.Provider {
 		p := &schema.Provider{
+			Schema: map[string]*schema.Schema{
+				"keyid": &schema.Schema{
+					Type:        schema.TypeString,
+					Optional:    true,
+					DefaultFunc: schema.EnvDefaultFunc("MYTHIC_API_KEYID", nil),
+				},
+				"secret": &schema.Schema{
+					Type:        schema.TypeString,
+					Optional:    true,
+					Sensitive:   true,
+					DefaultFunc: schema.EnvDefaultFunc("MYTHIC_API_SECRET", nil),
+				},
+			},
+
 			DataSourcesMap: map[string]*schema.Resource{
-				"scaffolding_data_source": dataSourceScaffolding(),
+				"mythic_vpsproducts": dataSourceVPSProducts(),
 			},
 			ResourcesMap: map[string]*schema.Resource{
-				"scaffolding_resource": resourceScaffolding(),
+				"mythic_vps": resourceVPS(),
 			},
 		}
 
@@ -40,18 +56,27 @@ func New(version string) func() *schema.Provider {
 	}
 }
 
-type apiClient struct {
-	// Add whatever fields, client or connection info, etc. here
-	// you would need to setup to communicate with the upstream
-	// API.
-}
-
 func configure(version string, p *schema.Provider) func(context.Context, *schema.ResourceData) (any, diag.Diagnostics) {
-	return func(context.Context, *schema.ResourceData) (any, diag.Diagnostics) {
-		// Setup a User-Agent for your API client (replace the provider name for yours):
+	return func(ctx context.Context, d *schema.ResourceData) (any, diag.Diagnostics) {
+		// Setup a User-Agent for your API client (replace the providerd name for yours):
 		// userAgent := p.UserAgent("terraform-provider-scaffolding", version)
 		// TODO: myClient.UserAgent = userAgent
 
-		return &apiClient{}, nil
+		keyid := d.Get("keyid").(string)
+		secret := d.Get("secret").(string)
+
+		// Warning or errors can be collected in a slice type
+		var diags diag.Diagnostics
+
+		if (keyid != "") && (secret != "") {
+			c, err := mythic.NewClient(nil, &keyid, &secret)
+			if err != nil {
+				return nil, diag.FromErr(err)
+			}
+
+			return c, diags
+		} else {
+			return nil, diag.Errorf("specify keyid and secret")
+		}
 	}
 }

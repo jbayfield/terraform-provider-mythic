@@ -1,6 +1,8 @@
-module github.com/hashicorp/terraform-provider-scaffolding
+module github.com/jbayfield/terraform-provider-mythic
 
 go 1.18
+
+replace github.com/jbayfield/mythic-client-go => /root/go/src/github.com/jbayfield/mythic-client-go
 
 require (
 	github.com/hashicorp/terraform-plugin-docs v0.13.0
@@ -41,6 +43,7 @@ require (
 	github.com/hashicorp/yamux v0.0.0-20181012175058-2f1d1f20f75d // indirect
 	github.com/huandu/xstrings v1.3.2 // indirect
 	github.com/imdario/mergo v0.3.13 // indirect
+	github.com/jbayfield/mythic-client-go v0.0.0-00010101000000-000000000000 // indirect
 	github.com/mattn/go-colorable v0.1.12 // indirect
 	github.com/mattn/go-isatty v0.0.14 // indirect
 	github.com/mitchellh/cli v1.1.4 // indirect
