@@ -15,9 +15,6 @@ import (
 
 func dataSourceVPSProducts() *schema.Resource {
 	return &schema.Resource{
-		// This description is used by the documentation generator and the language server.
-		Description: "Sample data source in the Terraform provider scaffolding.",
-
 		ReadContext: dataSourceVPSProductsRead,
 		Schema: map[string]*schema.Schema{
 			"vps_products": &schema.Schema{
@@ -53,7 +50,6 @@ func dataSourceVPSProducts() *schema.Resource {
 }
 
 func dataSourceVPSProductsRead(ctx context.Context, d *schema.ResourceData, meta any) diag.Diagnostics {
-	// use the meta value to retrieve your client from the provider configure method
 	c := meta.(*mythic.Client)
 
 	var diags diag.Diagnostics

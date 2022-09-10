@@ -10,9 +10,6 @@ import (
 
 func resourceVPS() *schema.Resource {
 	return &schema.Resource{
-		// This description is used by the documentation generator and the language server.
-		Description: "Sample resource in the Terraform provider scaffolding.",
-
 		CreateContext: resourceVPSCreate,
 		ReadContext:   resourceVPSRead,
 		UpdateContext: resourceVPSUpdate,
@@ -162,7 +159,6 @@ func resourceVPSCreate(ctx context.Context, d *schema.ResourceData, meta any) di
 }
 
 func resourceVPSRead(ctx context.Context, d *schema.ResourceData, meta any) diag.Diagnostics {
-	// use the meta value to retrieve your client from the provider configure method
 	c := meta.(*mythic.Client)
 
 	var diags diag.Diagnostics
@@ -199,15 +195,22 @@ func resourceVPSRead(ctx context.Context, d *schema.ResourceData, meta any) diag
 }
 
 func resourceVPSUpdate(ctx context.Context, d *schema.ResourceData, meta any) diag.Diagnostics {
-	// use the meta value to retrieve your client from the provider configure method
-	// client := meta.(*apiClient)
-
 	return diag.Errorf("not implemented")
 }
 
 func resourceVPSDelete(ctx context.Context, d *schema.ResourceData, meta any) diag.Diagnostics {
-	// use the meta value to retrieve your client from the provider configure method
-	// client := meta.(*apiClient)
+	c := meta.(*mythic.Client)
 
-	return diag.Errorf("not implemented")
+	var diags diag.Diagnostics
+
+	err := c.DestroyVPS(d.Id(), &c.Token)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
+	// d.SetId("") is automatically called assuming delete returns no errors, but
+	// it is added here for explicitness.
+	d.SetId("")
+
+	return diags
 }
