@@ -22,132 +22,114 @@ func resourceVPS() *schema.Resource {
 
 		// TODO: Work out which of the forcenew/computed/required are redundant
 		Schema: map[string]*schema.Schema{
-			"vps": &schema.Schema{
-				Type:     schema.TypeList,
+			"name": &schema.Schema{
+				Type:     schema.TypeString,
+				Optional: true,
+				ForceNew: false,
+			},
+			"product": &schema.Schema{
+				Type:     schema.TypeString,
 				Required: true,
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"name": &schema.Schema{
-							Type:     schema.TypeString,
-							Required: false,
-							ForceNew: false,
-						},
-						"identifier": &schema.Schema{
-							Type:     schema.TypeString,
-							ForceNew: true,
-							Computed: false,
-							Required: true,
-						},
-						"product": &schema.Schema{
-							Type:     schema.TypeString,
-							Required: true,
-							Computed: false,
-							ForceNew: false,
-						},
-						"dormant": &schema.Schema{
-							Type:     schema.TypeBool,
-							Computed: false,
-							Optional: true,
-							Default:  false,
-							ForceNew: false,
-						},
-						"status": &schema.Schema{
-							Type:     schema.TypeString,
-							Computed: true,
-						},
-						"hostserver": &schema.Schema{
-							Type:     schema.TypeString,
-							Computed: true,
-						},
-						"zone_code": &schema.Schema{
-							Type:     schema.TypeString,
-							Computed: true,
-						},
-						"zone_name": &schema.Schema{
-							Type:     schema.TypeString,
-							Computed: true,
-						},
-						"cpumode": &schema.Schema{
-							Type:     schema.TypeString,
-							Computed: false,
-							Optional: true,
-							Default:  "performance",
-							ForceNew: false,
-						},
-						"netdevice": &schema.Schema{
-							Type:     schema.TypeString,
-							Computed: false,
-							Optional: true,
-							Default:  "virtio",
-							ForceNew: false,
-						},
-						"diskbus": &schema.Schema{
-							Type:     schema.TypeString,
-							Computed: false,
-							Optional: true,
-							Default:  "virtio",
-							ForceNew: false,
-						},
-						"price": &schema.Schema{
-							Type:     schema.TypeFloat,
-							Computed: true,
-						},
-						"isoimage": &schema.Schema{
-							Type:     schema.TypeString,
-							Computed: false,
-							Optional: true,
-							Default:  "automated-install-config",
-							ForceNew: false,
-						},
-						"bootdevice": &schema.Schema{
-							Type:     schema.TypeString,
-							Computed: false,
-							Optional: true,
-							Default:  "hd",
-							ForceNew: false,
-						},
-						"ipv4": &schema.Schema{
-							Type:     schema.TypeList,
-							Computed: true,
-							Elem: &schema.Schema{
-								Type: schema.TypeString,
-							},
-						},
-						"ipv6": &schema.Schema{
-							Type:     schema.TypeList,
-							Computed: true,
-							Elem: &schema.Schema{
-								Type: schema.TypeString,
-							},
-						},
-						"spec_disktype": &schema.Schema{
-							Type:     schema.TypeString,
-							ForceNew: true,
-							Optional: true,
-							Default:  "ssd",
-						},
-						"spec_disksize": &schema.Schema{
-							Type:     schema.TypeInt,
-							Required: true,
-							Computed: false,
-							ForceNew: false,
-						},
-						"spec_cores": &schema.Schema{
-							Type:     schema.TypeInt,
-							Computed: true,
-						},
-						"spec_ram": &schema.Schema{
-							Type:     schema.TypeInt,
-							Computed: true,
-						},
-						"macs": &schema.Schema{
-							Type:     schema.TypeList,
-							Computed: true,
-							Elem: &schema.Schema{
-								Type: schema.TypeString,
-							},
-						},
-					},
+				Computed: false,
+				ForceNew: false,
+			},
+			"dormant": &schema.Schema{
+				Type:     schema.TypeBool,
+				Computed: false,
+				Optional: true,
+				Default:  false,
+				ForceNew: false,
+			},
+			"status": &schema.Schema{
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+			"hostserver": &schema.Schema{
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+			"zone_code": &schema.Schema{
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+			"zone_name": &schema.Schema{
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+			"cpumode": &schema.Schema{
+				Type:     schema.TypeString,
+				Computed: false,
+				Optional: true,
+				Default:  "performance",
+				ForceNew: false,
+			},
+			"netdevice": &schema.Schema{
+				Type:     schema.TypeString,
+				Computed: false,
+				Optional: true,
+				Default:  "virtio",
+				ForceNew: false,
+			},
+			"diskbus": &schema.Schema{
+				Type:     schema.TypeString,
+				Computed: false,
+				Optional: true,
+				Default:  "virtio",
+				ForceNew: false,
+			},
+			"isoimage": &schema.Schema{
+				Type:     schema.TypeString,
+				Computed: false,
+				Optional: true,
+				Default:  "automated-install-config",
+				ForceNew: false,
+			},
+			"bootdevice": &schema.Schema{
+				Type:     schema.TypeString,
+				Computed: false,
+				Optional: true,
+				Default:  "hd",
+				ForceNew: false,
+			},
+			"ipv4": &schema.Schema{
+				Type:     schema.TypeList,
+				Computed: true,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+			},
+			"ipv6": &schema.Schema{
+				Type:     schema.TypeList,
+				Computed: true,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+			},
+			"disktype": &schema.Schema{
+				Type:     schema.TypeString,
+				ForceNew: true,
+				Optional: true,
+				Default:  "ssd",
+			},
+			"disksize": &schema.Schema{
+				Type:     schema.TypeInt,
+				Required: true,
+				Computed: false,
+				ForceNew: false,
+			},
+			"cores": &schema.Schema{
+				Type:     schema.TypeInt,
+				Computed: true,
+			},
+			"ram": &schema.Schema{
+				Type:     schema.TypeInt,
+				Computed: true,
+			},
+			"macs": &schema.Schema{
+				Type:     schema.TypeList,
+				Computed: true,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
 				},
 			},
 		},
@@ -170,7 +152,20 @@ func resourceVPSCreate(ctx context.Context, d *schema.ResourceData, meta any) di
 	// for more information
 	// tflog.Trace(ctx, "created a resource")
 
-	return diag.Errorf("not implemented")
+	var diags diag.Diagnostics
+
+	vpsSettings := d.Get("vps").([]interface{})[0].(map[string]interface{})
+	tflog.Info(ctx, fmt.Sprintf("%v", vpsSettings))
+
+	vps := mythic.VPS{
+		Name:       vpsSettings["name"].(string),
+		Identifier: vpsSettings["identifier"].(string),
+	}
+
+	// TODO: Actually implement VPS creation on the API client side
+	tflog.Info(ctx, fmt.Sprintf("%v", vps))
+
+	return diags
 }
 
 func resourceVPSRead(ctx context.Context, d *schema.ResourceData, meta any) diag.Diagnostics {
@@ -184,12 +179,28 @@ func resourceVPSRead(ctx context.Context, d *schema.ResourceData, meta any) diag
 		return diag.FromErr(err)
 	}
 
-	vpsFlattened := flattenVPSData(vps)
-	tflog.Info(ctx, fmt.Sprintf("%v", vpsFlattened))
+	d.SetId(vps.Identifier)
+	d.Set("name", vps.Name)
+	d.Set("product", vps.Product)
+	d.Set("dormant", vps.Dormant)
+	d.Set("status", vps.Status)
+	d.Set("hostserver", vps.HostServer)
+	d.Set("zone_code", vps.Zone.Code)
+	d.Set("zone_name", vps.Zone.Name)
+	d.Set("cpumode", vps.CPUMode)
+	d.Set("netdevice", vps.NetDevice)
+	d.Set("diskbus", vps.DiskBus)
+	d.Set("isoimage", vps.ISOImage)
+	d.Set("bootdevice", vps.BootDevice)
+	d.Set("ipv4", vps.IPv4)
+	d.Set("ipv6", vps.IPv6)
+	d.Set("macs", vps.MACs)
+	d.Set("disktype", vps.Specs.DiskType)
+	d.Set("disksize", vps.Specs.DiskSize)
+	d.Set("cores", vps.Specs.Cores)
+	d.Set("ram", vps.Specs.RAM)
 
-	if err := d.Set("vps", vpsFlattened); err != nil {
-		return diag.FromErr(err)
-	}
+	// TODO: SetConnInfo with IPv4 if available or v6
 
 	return diags
 }
@@ -206,39 +217,4 @@ func resourceVPSDelete(ctx context.Context, d *schema.ResourceData, meta any) di
 	// client := meta.(*apiClient)
 
 	return diag.Errorf("not implemented")
-}
-
-func flattenVPSData(vps *mythic.VPS) []interface{} {
-	if vps != nil {
-		ps := make([]interface{}, 0)
-		info := make(map[string]interface{})
-
-		info["name"] = vps.Name
-		info["identifier"] = vps.Identifier
-		info["product"] = vps.Product
-		info["dormant"] = vps.Dormant
-		info["status"] = vps.Status
-		info["hostserver"] = vps.HostServer
-		info["zone_code"] = vps.Zone.Code
-		info["zone_name"] = vps.Zone.Name
-		info["cpumode"] = vps.CPUMode
-		info["netdevice"] = vps.NetDevice
-		info["diskbus"] = vps.DiskBus
-		info["price"] = vps.Price
-		info["isoimage"] = vps.ISOImage
-		info["bootdevice"] = vps.BootDevice
-		info["ipv4"] = vps.IPv4
-		info["ipv6"] = vps.IPv6
-		info["spec_disktype"] = vps.Specs.DiskType
-		info["spec_disksize"] = vps.Specs.DiskSize
-		info["spec_cores"] = vps.Specs.Cores
-		info["spec_ram"] = vps.Specs.RAM
-		info["macs"] = vps.MACs
-
-		ps = append(ps, info)
-
-		return ps
-	}
-
-	return make([]interface{}, 0)
 }
