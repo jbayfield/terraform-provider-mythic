@@ -2,9 +2,7 @@ package provider
 
 import (
 	"context"
-	"fmt"
 
-	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/jbayfield/mythic-client-go"
@@ -141,29 +139,24 @@ func resourceVPS() *schema.Resource {
 }
 
 func resourceVPSCreate(ctx context.Context, d *schema.ResourceData, meta any) diag.Diagnostics {
-	// use the meta value to retrieve your client from the provider configure method
-	// client := meta.(*apiClient)
-
-	// idFromAPI := "my-id"
-	// d.SetId(idFromAPI)
-
-	// write logs using the tflog package
-	// see https://pkg.go.dev/github.com/hashicorp/terraform-plugin-log/tflog
-	// for more information
-	// tflog.Trace(ctx, "created a resource")
+	c := meta.(*mythic.Client)
 
 	var diags diag.Diagnostics
 
-	vpsSettings := d.Get("vps").([]interface{})[0].(map[string]interface{})
-	tflog.Info(ctx, fmt.Sprintf("%v", vpsSettings))
-
-	vps := mythic.VPS{
-		Name:       vpsSettings["name"].(string),
-		Identifier: vpsSettings["identifier"].(string),
+	// TODO: Provide all of the things
+	vpsspec := mythic.VPSCreateSpec{
+		Identifier: d.Id(),
+		Product:    d.Get("product").(string),
+		DiskSize:   d.Get("disksize").(int),
 	}
 
-	// TODO: Actually implement VPS creation on the API client side
-	tflog.Info(ctx, fmt.Sprintf("%v", vps))
+	vps, err := c.CreateVPS(vpsspec, &c.Token)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
+	d.SetId(vps.Identifier)
+	resourceVPSRead(ctx, d, meta)
 
 	return diags
 }
