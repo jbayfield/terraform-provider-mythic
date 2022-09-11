@@ -53,37 +53,32 @@ func resourceVPS() *schema.Resource {
 			},
 			"cpumode": &schema.Schema{
 				Type:     schema.TypeString,
-				Computed: false,
+				Computed: true,
 				Optional: true,
-				Default:  "performance",
 				ForceNew: false,
 			},
 			"netdevice": &schema.Schema{
 				Type:     schema.TypeString,
-				Computed: false,
+				Computed: true,
 				Optional: true,
-				Default:  "virtio",
 				ForceNew: false,
 			},
 			"diskbus": &schema.Schema{
 				Type:     schema.TypeString,
-				Computed: false,
+				Computed: true,
 				Optional: true,
-				Default:  "virtio",
 				ForceNew: false,
 			},
 			"isoimage": &schema.Schema{
 				Type:     schema.TypeString,
-				Computed: false,
+				Computed: true,
 				Optional: true,
-				Default:  "automated-install-config",
 				ForceNew: false,
 			},
 			"bootdevice": &schema.Schema{
 				Type:     schema.TypeString,
-				Computed: false,
+				Computed: true,
 				Optional: true,
-				Default:  "hd",
 				ForceNew: false,
 			},
 			"ipv4": &schema.Schema{
@@ -195,7 +190,26 @@ func resourceVPSRead(ctx context.Context, d *schema.ResourceData, meta any) diag
 }
 
 func resourceVPSUpdate(ctx context.Context, d *schema.ResourceData, meta any) diag.Diagnostics {
-	return diag.Errorf("not implemented")
+	c := meta.(*mythic.Client)
+
+	var diags diag.Diagnostics
+
+	// TODO: Provide all of the things
+	vpsspec := mythic.VPSUpdateSpec{
+		Identifier: d.Id(),
+		Name:       d.Get("name").(string),
+		Product:    d.Get("product").(string),
+		DiskSize:   d.Get("disksize").(int),
+	}
+
+	err := c.UpdateVPS(vpsspec, &c.Token)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
+	resourceVPSRead(ctx, d, meta)
+
+	return diags
 }
 
 func resourceVPSDelete(ctx context.Context, d *schema.ResourceData, meta any) diag.Diagnostics {
